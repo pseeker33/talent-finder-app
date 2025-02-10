@@ -44,8 +44,8 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Matches table
-        Schema::create('matches', function (Blueprint $table) {
+        // Profle matches table
+        Schema::create('profile_matches', function (Blueprint $table) {
             $table->id();
             $table->foreignId('source_profile_id')->constrained('profiles')->onDelete('cascade');
             $table->foreignId('target_profile_id')->constrained('profiles')->onDelete('cascade');
@@ -53,6 +53,10 @@ return new class extends Migration
             $table->json('matching_details')->nullable();
             $table->string('status')->default('pending');
             $table->timestamps();
+
+            // Add index for performance
+            $table->index(['source_profile_id', 'target_profile_id']);
+            $table->index('status');
         });
     }
 
