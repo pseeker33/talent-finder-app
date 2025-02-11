@@ -1,10 +1,10 @@
 <x-app-layout>
-    <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div class="min-h-screen bg-gray-100">
         <div class="max-w-3xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 shadow rounded-lg">
+            <div class="bg-white shadow rounded-lg">
                 <!-- Progress bar -->
                 <div class="px-4 py-5 sm:p-6">
-                    <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
                         <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-500"
                              style="width: 0%"
                              x-bind:style="{ width: progress + '%' }"
@@ -26,13 +26,13 @@
                             <div class="space-y-6">
                                 <template x-for="question in questions" :key="question.id">
                                     <div class="space-y-4">
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                        <label class="block text-sm font-medium text-gray-700"
                                                x-text="question.question"></label>
 
                                         <!-- Select input -->
                                         <template x-if="question.type === 'select'">
                                             <select :name="question.id"
-                                                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600">
+                                                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
                                                 <option value="">Select an option</option>
                                                 <template x-for="(label, value) in question.options" :key="value">
                                                     <option :value="value" x-text="label"></option>
@@ -49,7 +49,7 @@
                                                                type="radio"
                                                                :value="value"
                                                                class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
-                                                        <label class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                                        <label class="ml-3 block text-sm font-medium text-gray-700"
                                                                x-text="label"></label>
                                                     </div>
                                                 </template>
@@ -62,7 +62,7 @@
                                     <button type="button"
                                             @click="previousStep"
                                             x-show="currentStep > 1"
-                                            class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600">
+                                            class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                         Previous
                                     </button>
                                     <button type="submit"
