@@ -1,31 +1,51 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\{
+    ProfileController,
+    QuestionnaireController,
+    MatchingController,
+    ChatController,
+    Auth\LinkedInAuthController
+};
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
+// del archivo original al crearse el proyecto
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
+// del archivo original al crearse el proyecto
+Route::get('/dashboard', function () { 
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+Route::middleware(['auth'])->group(function () {
+    // Questionnaire routes
+    Route::get('/questionnaire', [QuestionnaireController::class, 'show'])->name('questionnaire.show');
+    Route::post('/questionnaire/store', [QuestionnaireController::class, 'store'])->name('questionnaire.store');
+    Route::get('/questionnaire/step/{step}', [QuestionnaireController::class, 'getStep'])->name('questionnaire.step');
+
+    // Profile routes
+    
+    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit'); // del original al crearse el proyecto
+    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update'); // del original al crearse el proyecto
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/profile/sync-linkedin', [ProfileController::class, 'syncLinkedIn'])->name('profile.sync-linkedin');
+
+    // Matching routes
+    Route::get('/matches', [MatchingController::class, 'index'])->name('matches.index');
+    Route::get('/matches/{match}', [MatchingController::class, 'show'])->name('matches.show');
+    Route::post('/matches/filter', [MatchingController::class, 'filter'])->name('matches.filter');
+
+    // Chat routes
+    Route::get('/chat/{match}', [ChatController::class, 'show'])->name('chat.show');
+    Route::post('/chat/{match}/message', [ChatController::class, 'sendMessage'])->name('chat.message');
 });
 
-require __DIR__.'/auth.php';
+// LinkedIn OAuth routes
+Route::get('auth/linkedin', [LinkedInAuthController::class, 'redirect'])->name('linkedin.redirect');
+Route::get('auth/linkedin/callback', [LinkedInAuthController::class, 'callback'])->name('linkedin.callback');
+
+require __DIR__.'/auth.php'; // del archivo original al crearse el proyecto

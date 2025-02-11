@@ -40,3 +40,4 @@ class LinkedInService
             return []; // O maneja el error como consideres apropiado
         }
     }
+}
