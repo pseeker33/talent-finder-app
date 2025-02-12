@@ -2,15 +2,14 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -21,6 +20,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'linkedin_id',
+        'linkedin_token',
+        'preferences',
     ];
 
     /**
@@ -31,6 +33,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'linkedin_token',
     ];
 
     /**
@@ -40,6 +43,48 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
+        'preferences' => 'array',
     ];
+
+    /**
+     * Get the profile associated with the user.
+     */
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
+    }
+
+    /**
+     * Get the user's questionnaire answers.
+     */
+    public function answers()
+    {
+        return $this->hasMany(Answer::class);
+    }
+
+    /**
+     * Get the user's saved profile matches.
+     */
+    public function savedMatches()
+    {
+        return $this->hasMany(ProfileMatch::class);
+    }
+
+    /**
+     * Get the user's chat history.
+     */
+    public function chatHistory()
+    {
+        return $this->hasMany(ChatHistory::class);
+    }
+
+    /**
+     * Check if user has completed the onboarding questionnaire.
+     */
+    public function hasCompletedQuestionnaire(): bool
+    {
+        return $this->answers()
+            ->whereIn('question_id', Question::required()->pluck('id'))
+            ->count() === Question::required()->count();
+    }
 }
